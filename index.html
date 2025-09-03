@@ -3,518 +3,320 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Number Guessing Game</title>
-    <style>  
+    <title>Dice Functions</title>
+    <style>
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        
         body {
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
-            color: #fff;
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: #333;
             min-height: 100vh;
-            padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
-        }
-        
-        .container {
-            max-width: 1000px;
-            width: 100%;
-            margin: 0 auto;
-        }
-        
-        header {
-            text-align: center;
-            margin-bottom: 30px;
             padding: 20px;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
-        
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            width: 100%;
+            max-width: 800px;
+            margin: 20px 0;
+        }
         h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            color: #e94560;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-        }
-        
-        .game-info {
-            display: flex;
-            justify-content: space-between;
+            text-align: center;
+            color: #2c3e50;
             margin-bottom: 20px;
-            flex-wrap: wrap;
-            gap: 15px;
+            font-size: 2.5rem;
         }
-        
-        .info-box {
-            background: rgba(0, 0, 0, 0.3);
+        h2 {
+            color: #3498db;
+            margin: 25px 0 15px;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 8px;
+        }
+        .function-demo {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 15px;
+        }
+        label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #2c3e50;
+        }
+        input, select {
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        input:focus, select:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+        button {
+            background: linear-gradient(to right, #3498db, #2c3e50);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin: 10px 5px;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        .result {
+            background-color: #e8f4fc;
+            border-left: 5px solid #3498db;
             padding: 15px;
-            border-radius: 8px;
+            margin-top: 15px;
+            border-radius: 4px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        .code-block {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: monospace;
+            font-size: 14px;
+        }
+        .flex-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .flex-row > * {
             flex: 1;
             min-width: 200px;
         }
-        
-        .info-box h3 {
-            margin-bottom: 10px;
-            color: #0fccce;
-        }
-        
-        .betting-section {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-        
-        input, select, button {
-            padding: 12px 15px;
-            border: none;
-            border-radius: 5px;
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            font-size: 1rem;
-        }
-        
-        input {
-            width: 100px;
-        }
-        
-        button {
-            background: #e94560;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        button:hover {
-            background: #ff577f;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-        
-        button:disabled {
-            background: #555;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-        
-        .difficulty-section {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-        
-        .difficulty-btn {
-            background: #0fccce;
-        }
-        
-        .difficulty-btn.selected {
-            background: #e94560;
-            box-shadow: 0 0 0 3px #ff577f;
-        }
-        
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(10, 1fr);
-            gap: 8px;
-            margin-bottom: 30px;
-        }
-        
-        .number-btn {
-            aspect-ratio: 1/1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-weight: bold;
-            font-size: 1.2rem;
-            border-radius: 5px;
-            background: rgba(255, 255, 255, 0.1);
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        
-        .number-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-        
-        .number-btn.guessed {
-            background: rgba(0, 0, 0, 0.5);
-            color: #666;
-            cursor: not-allowed;
-        }
-        
-        .number-btn.correct {
-            background: #28a745;
-        }
-        
-        .message-box {
-            padding: 20px;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 10px;
-            margin-bottom: 20px;
-            text-align: center;
-            min-height: 100px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .message {
-            font-size: 1.5rem;
-            margin-bottom: 10px;
-            color: #0fccce;
-        }
-        
-        .sub-message {
-            font-size: 1rem;
-            color: #ccc;
-        }
-        
-        .seed-section {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-        
-        .seed-section h3 {
-            margin-bottom: 10px;
-            color: #0fccce;
-        }
-        
-        .seed-info {
-            word-break: break-all;
-            font-family: monospace;
-            font-size: 0.9rem;
-            background: rgba(0, 0, 0, 0.5);
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 10px;
-        }
-        
-        @media (max-width: 768px) {
-            .grid-container {
-                gap: 5px;
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
             }
-            
-            .number-btn {
-                font-size: 0.9rem;
-            }
-            
             h1 {
                 font-size: 2rem;
+            }
+            .flex-row {
+                flex-direction: column;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>Number Guessing Game</h1>
-            <p>Guess the correct number between 1 and 100 to win!</p>
-        </header>
+        <h1>🎲 Dice Functions</h1>
         
-        <div class="game-info">
-            <div class="info-box">
-                <h3>Balance</h3>
-                <p id="balance">$100.00</p>
+        <div class="function-demo">
+            <h2>Generate Seeds</h2>
+            <div class="flex-row">
+                <div class="input-group">
+                    <label for="serverSeedLength">Server Seed Length</label>
+                    <input type="number" id="serverSeedLength" value="64" min="16" max="128">
+                </div>
+                <div class="input-group">
+                    <label for="clientSeedLength">Client Seed Length</label>
+                    <input type="number" id="clientSeedLength" value="20" min="8" max="64">
+                </div>
             </div>
-            
-            <div class="info-box">
-                <h3>Guesses Left</h3>
-                <p id="guesses-left">-</p>
+            <button onclick="generateSeeds()">Generate Seeds</button>
+            <div class="result" id="seedResults"></div>
+        </div>
+
+        <div class="function-demo">
+            <h2>SHA-256 Hash</h2>
+            <div class="input-group">
+                <label for="hashInput">Input String</label>
+                <input type="text" id="hashInput" placeholder="Enter text to hash">
             </div>
-            
-            <div class="info-box">
-                <h3>Current Bet</h3>
-                <p id="current-bet">$0.00</p>
+            <button onclick="calculateHash()">Calculate Hash</button>
+            <div class="result" id="hashResult"></div>
+        </div>
+
+        <div class="function-demo">
+            <h2>Calculate Dice Result</h2>
+            <div class="flex-row">
+                <div class="input-group">
+                    <label for="serverSeed">Server Seed</label>
+                    <input type="text" id="serverSeed" placeholder="Enter server seed">
+                </div>
+                <div class="input-group">
+                    <label for="clientSeed">Client Seed</label>
+                    <input type="text" id="clientSeed" placeholder="Enter client seed">
+                </div>
+                <div class="input-group">
+                    <label for="nonce">Nonce</label>
+                    <input type="number" id="nonce" value="1" min="1">
+                </div>
             </div>
+            <button onclick="calculateDiceResult()">Calculate Result</button>
+            <div class="result" id="diceResult"></div>
         </div>
-        
-        <div class="betting-section">
-            <label for="bet-amount">Place your bet (min $0.25):</label>
-            <input type="number" id="bet-amount" min="0.25" step="0.25" value="0.25">
-            <button id="place-bet">Place Bet</button>
-        </div>
-        
-        <div class="difficulty-section">
-            <h3>Select Difficulty:</h3>
-            <button class="difficulty-btn" data-difficulty="easy">Easy (6 guesses)</button>
-            <button class="difficulty-btn" data-difficulty="medium">Medium (4 guesses)</button>
-            <button class="difficulty-btn" data-difficulty="hard">Hard (2 guesses)</button>
-            <button class="difficulty-btn" data-difficulty="expert">Expert (1 guess)</button>
-        </div>
-        
-        <div class="seed-section">
-            <h3>Provably Fair Verification</h3>
-            <p>Server Seed (Hashed):</p>
-            <div class="seed-info" id="hashed-server-seed">a1b2c3d4e5f67890a1b2c3d4e5f67890a1b2c3d4e5f67890a1b2c3d4e5f67890a1b2c3d4e5f67890a1b2c3d4e5f67890</div>
-            <p>Client Seed:</p>
-            <input type="text" id="client-seed" value="client12345">
-            <button id="new-server-seed">Generate New Server Seed</button>
-        </div>
-        
-        <div class="message-box">
-            <div class="message" id="message">Place a bet to start the game!</div>
-            <div class="sub-message" id="sub-message">Select a difficulty and place your bet.</div>
-        </div>
-        
-        <div class="grid-container" id="number-grid">
-            <!-- Numbers 1-100 will be generated here -->
-        </div>
-        
-        <div style="text-align: center;">
-            <button id="new-game" disabled>New Game</button>
+
+        <h2>JavaScript Implementation</h2>
+        <div class="code-block">
+// Constants
+const DEFAULT_SERVER_SEED_LENGTH = 64;
+const DEFAULT_CLIENT_SEED_LENGTH = 20;
+const DICE_MULTIPLIER = 10001;
+
+// Generate a random server seed
+function generateServerSeed(seedLength = DEFAULT_SERVER_SEED_LENGTH) {
+    const possibleCharacters = '0123456789abcdef';
+    let seed = '';
+    for (let i = 0; i < seedLength; i++) {
+        seed += possibleCharacters.charAt(Math.floor(Math.random() * possibleCharacters.length));
+    }
+    return seed;
+}
+
+// Generate a random client seed
+function generateClientSeed(seedLength = DEFAULT_CLIENT_SEED_LENGTH) {
+    const possibleCharacters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!-_+=/?@#$%^&*()';
+    let seed = '';
+    for (let i = 0; i < seedLength; i++) {
+        seed += possibleCharacters.charAt(Math.floor(Math.random() * possibleCharacters.length));
+    }
+    return seed;
+}
+
+// Calculate SHA-256 hash (async)
+async function sha256Encrypt(inputString) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(inputString);
+    const hash = await crypto.subtle.digest('SHA-256', data);
+    return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+// Convert seeds to hexadecimals (async)
+async function seedsToHexadecimals(serverSeed, clientSeed, nonce) {
+    const message = `${clientSeed}:${nonce}:0`;
+    const encoder = new TextEncoder();
+    const keyData = encoder.encode(serverSeed);
+    const messageData = encoder.encode(message);
+    
+    const key = await crypto.subtle.importKey(
+        'raw', keyData, { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']
+    );
+    
+    const signature = await crypto.subtle.sign('HMAC', key, messageData);
+    return [Array.from(new Uint8Array(signature)).map(b => b.toString(16).padStart(2, '0')).join('')];
+}
+
+// Convert hexadecimal string to byte array
+function hexadecimalToBytes(hexadecimal) {
+    const bytes = [];
+    for (let i = 0; i < hexadecimal.length; i += 2) {
+        bytes.push(parseInt(hexadecimal.substr(i, 2), 16));
+    }
+    return bytes;
+}
+
+// Convert bytes to a basic number
+function bytesToBasicNumber(bytesList) {
+    return (bytesList[0] / Math.pow(256, 1)) +
+           (bytesList[1] / Math.pow(256, 2)) +
+           (bytesList[2] / Math.pow(256, 3)) +
+           (bytesList[3] / Math.pow(256, 4));
+}
+
+// Convert bytes to a number with multiplier
+function bytesToNumber(bytesList, multiplier) {
+    const basicNumber = bytesToBasicNumber(bytesList);
+    return Math.floor(basicNumber * multiplier);
+}
+
+// Calculate dice result from seeds (async)
+async function seedsToResults(serverSeed, clientSeed, nonce) {
+    const hexs = await seedsToHexadecimals(serverSeed, clientSeed, nonce);
+    const bytesLists = hexs.map(hexadecimalToBytes);
+    const row = [];
+    for (const bytesList of bytesLists) {
+        for (let i = 0; i < bytesList.length; i += 4) {
+            const chunk = bytesList.slice(i, i + 4);
+            if (chunk.length === 4) {
+                row.push(bytesToNumber(chunk, DICE_MULTIPLIER));
+                if (row.length === 1) {
+                    return Math.round(row.reduce((a, b) => a + b, 0) / 100);
+                }
+            }
+        }
+    }
+}
         </div>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Game state variables
-            let balance = 100.00;
-            let currentBet = 0.00;
-            let guessesLeft = 0;
-            let correctNumber = 0;
-            let gameActive = false;
-            let difficulty = '';
-            let guessedNumbers = [];
+        // UI Functions
+        async function generateSeeds() {
+            const serverSeedLength = parseInt(document.getElementById('serverSeedLength').value);
+            const clientSeedLength = parseInt(document.getElementById('clientSeedLength').value);
             
-            // Provably fair variables
-            let serverSeed = generateRandomSeed();
-            let clientSeed = generateRandomSeed();
-            let nonce = 0;
+            const serverSeed = generateServerSeed(serverSeedLength);
+            const clientSeed = generateClientSeed(clientSeedLength);
             
-            // DOM elements
-            const balanceElement = document.getElementById('balance');
-            const guessesLeftElement = document.getElementById('guesses-left');
-            const currentBetElement = document.getElementById('current-bet');
-            const betAmountInput = document.getElementById('bet-amount');
-            const placeBetButton = document.getElementById('place-bet');
-            const difficultyButtons = document.querySelectorAll('.difficulty-btn');
-            const messageElement = document.getElementById('message');
-            const subMessageElement = document.getElementById('sub-message');
-            const numberGrid = document.getElementById('number-grid');
-            const newGameButton = document.getElementById('new-game');
-            const hashedServerSeedElement = document.getElementById('hashed-server-seed');
-            const clientSeedInput = document.getElementById('client-seed');
-            const newServerSeedButton = document.getElementById('new-server-seed');
+            document.getElementById('seedResults').innerHTML = 
+                `Server Seed (${serverSeedLength} chars):\n${serverSeed}\n\nClient Seed (${clientSeedLength} chars):\n${clientSeed}`;
             
-            // Initialize the number grid
-            function initializeGrid() {
-                numberGrid.innerHTML = '';
-                for (let i = 1; i <= 100; i++) {
-                    const button = document.createElement('div');
-                    button.className = 'number-btn';
-                    button.textContent = i;
-                    button.dataset.number = i;
-                    button.addEventListener('click', () => handleGuess(i));
-                    numberGrid.appendChild(button);
-                }
+            // Pre-fill the other forms with these values
+            document.getElementById('serverSeed').value = serverSeed;
+            document.getElementById('clientSeed').value = clientSeed;
+        }
+        
+        async function calculateHash() {
+            const input = document.getElementById('hashInput').value;
+            if (!input) {
+                alert('Please enter some text to hash');
+                return;
             }
             
-            // Generate a random 64-digit hexadecimal server seed
-            function generateRandomSeed(int num_characters) {
-                let seed = '';
-                const hexChars = '0123456789abcdef';
-                for (let i = 0; i < num_characters; i++) {
-                    seed += hexChars[Math.floor(Math.random() * 16)];
-                }
-                return seed;
+            const hash = await sha256Encrypt(input);
+            document.getElementById('hashResult').textContent = hash;
+        }
+        
+        async function calculateDiceResult() {
+            const serverSeed = document.getElementById('serverSeed').value;
+            const clientSeed = document.getElementById('clientSeed').value;
+            const nonce = parseInt(document.getElementById('nonce').value);
+            
+            if (!serverSeed || !clientSeed) {
+                alert('Please provide both server and client seeds');
+                return;
             }
             
-            // Hash the server seed (simulated)
-            function hashSeed(seed) {
-                // In a real implementation, this would use a proper cryptographic hash function
-                // For demonstration, we're just returning a mock hash
-                return seed.split('').reverse().join('') + seed;
-            }
-            
-            // Generate the correct number using provably fair method
-            function generateCorrectNumber() {
-                // Combine seeds and nonce
-                const combined = serverSeed + clientSeed + nonce.toString();
-                
-                // In a real implementation, this would use a proper cryptographic method
-                // For demonstration, we're creating a simple hash
-                let hash = 0;
-                for (let i = 0; i < combined.length; i++) {
-                    hash = ((hash << 5) - hash) + combined.charCodeAt(i);
-                    hash |= 0; // Convert to 32bit integer
-                }
-                
-                // Ensure the result is between 1 and 100
-                return Math.abs(hash % 100) + 1;
-            }
-            
-            // Update the UI with current game state
-            function updateUI() {
-                balanceElement.textContent = `$${balance.toFixed(2)}`;
-                guessesLeftElement.textContent = gameActive ? guessesLeft : '-';
-                currentBetElement.textContent = `$${currentBet.toFixed(2)}`;
-                hashedServerSeedElement.textContent = hashSeed(serverSeed);
-                
-                // Update number buttons
-                document.querySelectorAll('.number-btn').forEach(btn => {
-                    const num = parseInt(btn.dataset.number);
-                    if (guessedNumbers.includes(num)) {
-                        btn.classList.add('guessed');
-                        if (num === correctNumber) {
-                            btn.classList.add('correct');
-                        }
-                    } else {
-                        btn.classList.remove('guessed', 'correct');
-                    }
-                });
-            }
-            
-            // Handle number guess
-            function handleGuess(number) {
-                if (!gameActive || guessedNumbers.includes(number)) return;
-                
-                guessedNumbers.push(number);
-                guessesLeft--;
-                
-                if (number === correctNumber) {
-                    // Player wins
-                    const multiplier = getDifficultyMultiplier();
-                    const winnings = currentBet * multiplier;
-                    balance += winnings;
-                    messageElement.textContent = `Congratulations! You won $${winnings.toFixed(2)}!`;
-                    subMessageElement.textContent = `The correct number was ${correctNumber}.`;
-                    gameActive = false;
-                    newGameButton.disabled = false;
-                } else if (guessesLeft === 0) {
-                    // Player loses
-                    balance -= currentBet;
-                    messageElement.textContent = `Game over! You lost $${currentBet.toFixed(2)}.`;
-                    subMessageElement.textContent = `The correct number was ${correctNumber}.`;
-                    gameActive = false;
-                    newGameButton.disabled = false;
-                } else {
-                    // Continue game
-                    if (number < correctNumber) {
-                        messageElement.textContent = 'Too low! Try a higher number.';
-                    } else {
-                        messageElement.textContent = 'Too high! Try a lower number.';
-                    }
-                    subMessageElement.textContent = `You have ${guessesLeft} guess(es) remaining.`;
-                }
-                
-                updateUI();
-            }
-            
-            // Get multiplier based on difficulty
-            function getDifficultyMultiplier() {
-                switch(difficulty) {
-                    case 'easy': return 2;
-                    case 'medium': return 3;
-                    case 'hard': return 5;
-                    case 'expert': return 10;
-                    default: return 2;
-                }
-            }
-            
-            // Start a new game
-            function startNewGame() {
-                if (currentBet <= 0) {
-                    messageElement.textContent = 'Please place a bet first!';
-                    return;
-                }
-                
-                if (!difficulty) {
-                    messageElement.textContent = 'Please select a difficulty!';
-                    return;
-                }
-                
-                // Set guesses based on difficulty
-                switch(difficulty) {
-                    case 'easy': guessesLeft = 6; break;
-                    case 'medium': guessesLeft = 4; break;
-                    case 'hard': guessesLeft = 2; break;
-                    case 'expert': guessesLeft = 1; break;
-                }
-                
-                // Generate the correct number using provably fair method
-                correctNumber = generateCorrectNumber();
-                nonce++; // Increment nonce for next game
-                
-                gameActive = true;
-                guessedNumbers = [];
-                
-                messageElement.textContent = `I'm thinking of a number between 1 and 100...`;
-                subMessageElement.textContent = `You have ${guessesLeft} guess(es) remaining.`;
-                
-                newGameButton.disabled = true;
-                updateUI();
-            }
-            
-            // Place bet
-            placeBetButton.addEventListener('click', () => {
-                const betAmount = parseFloat(betAmountInput.value);
-                
-                if ((isNaN(betAmount) || betAmount < 0.25) && (betAmount != 0.0)) {
-                    messageElement.textContent = 'Minimum bet is $0.25!';
-                    return;
-                }
-                
-                if (betAmount > balance) {
-                    messageElement.textContent = 'You don\'t have enough balance!';
-                    return;
-                }
-                
-                currentBet = betAmount;
-                messageElement.textContent = `Bet placed: $${currentBet.toFixed(2)}. Select difficulty and start game.`;
-                subMessageElement.textContent = '';
-                
-                updateUI();
-            });
-            
-            // Difficulty selection
-            difficultyButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    difficultyButtons.forEach(btn => btn.classList.remove('selected'));
-                    button.classList.add('selected');
-                    difficulty = button.dataset.difficulty;
-                    messageElement.textContent = `Difficulty set to ${button.textContent}. Place your bet!`;
-                });
-            });
-            
-            // New game button
-            newGameButton.addEventListener('click', () => {
-                startNewGame();
-            });
-            
-            // New server seed
-            newServerSeedButton.addEventListener('click', () => {
-                serverSeed = generateRandomSeed(64);
-                clientSeed = generateRandomSeed(15);
-                nonce = 0;
-                updateUI();
-                messageElement.textContent = 'New server seed generated!';
-            });
-            
-            // Update client seed
-            clientSeedInput.addEventListener('change', () => {
-                clientSeed = clientSeedInput.value;
-                nonce = 0;
-                messageElement.textContent = 'Client seed updated!';
-            });
-            
-            // Initialize the game
-            initializeGrid();
-            updateUI();
-        });
+            const result = await seedsToResults(serverSeed, clientSeed, nonce);
+            document.getElementById('diceResult').textContent = `Dice Result: ${result}`;
+        }
+        
+        // Initialize with some values
+        window.onload = function() {
+            document.getElementById('serverSeed').value = generateServerSeed();
+            document.getElementById('clientSeed').value = generateClientSeed();
+        };
     </script>
 </body>
 </html>
