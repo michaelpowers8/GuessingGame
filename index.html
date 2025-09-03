@@ -324,10 +324,10 @@
             }
             
             // Generate a random 64-digit hexadecimal server seed
-            function generateRandomSeed() {
+            function generateRandomSeed(int num_characters) {
                 let seed = '';
                 const hexChars = '0123456789abcdef';
-                for (let i = 0; i < 64; i++) {
+                for (let i = 0; i < num_characters; i++) {
                     seed += hexChars[Math.floor(Math.random() * 16)];
                 }
                 return seed;
@@ -463,7 +463,7 @@
             placeBetButton.addEventListener('click', () => {
                 const betAmount = parseFloat(betAmountInput.value);
                 
-                if (isNaN(betAmount) || betAmount < 0.25) {
+                if ((isNaN(betAmount) || betAmount < 0.25) && (betAmount != 0.0)) {
                     messageElement.textContent = 'Minimum bet is $0.25!';
                     return;
                 }
@@ -497,7 +497,8 @@
             
             // New server seed
             newServerSeedButton.addEventListener('click', () => {
-                serverSeed = generateRandomSeed();
+                serverSeed = generateRandomSeed(64);
+                clientSeed = generateRandomSeed(15);
                 nonce = 0;
                 updateUI();
                 messageElement.textContent = 'New server seed generated!';
